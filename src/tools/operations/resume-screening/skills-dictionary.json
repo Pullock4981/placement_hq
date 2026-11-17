@@ -1,0 +1,221 @@
+{
+  "skills": [
+    {
+      "name": "React",
+      "aliases": ["react", "react.js", "reactjs", "react js"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "Next.js",
+      "aliases": ["next.js", "nextjs", "next js", "next"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "JavaScript",
+      "aliases": ["javascript", "js", "es6", "es6+", "ecmascript"],
+      "category": "language",
+      "domain": "web"
+    },
+    {
+      "name": "TypeScript",
+      "aliases": ["typescript", "ts"],
+      "category": "language",
+      "domain": "web"
+    },
+    {
+      "name": "Node.js",
+      "aliases": ["node.js", "nodejs", "node js", "node"],
+      "category": "backend",
+      "domain": "web"
+    },
+    {
+      "name": "Express.js",
+      "aliases": ["express", "express.js", "expressjs", "express js"],
+      "category": "backend",
+      "domain": "web"
+    },
+    {
+      "name": "MongoDB",
+      "aliases": ["mongodb", "mongo", "mongoose", "nosql"],
+      "category": "database",
+      "domain": "web"
+    },
+    {
+      "name": "PostgreSQL",
+      "aliases": ["postgresql", "postgres", "psql", "sql"],
+      "category": "database",
+      "domain": "web"
+    },
+    {
+      "name": "Tailwind CSS",
+      "aliases": ["tailwind", "tailwindcss", "tailwind css"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "Redux",
+      "aliases": ["redux", "redux toolkit", "rtk", "rtk query", "redux-toolkit", "state management"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "REST API",
+      "aliases": ["rest", "rest api", "rest apis", "restful", "restful apis", "restful api", "axios", "api integration"],
+      "category": "backend",
+      "domain": "web"
+    },
+    {
+      "name": "GraphQL",
+      "aliases": ["graphql", "apollo", "apollo client", "jwt", "mongoose", "bullmq"],
+      "category": "backend",
+      "domain": "web"
+    },
+    {
+      "name": "Docker",
+      "aliases": ["docker", "container", "containerization", "vercel"],
+      "category": "devops",
+      "domain": "web"
+    },
+    {
+      "name": "Git",
+      "aliases": ["git", "github", "gitlab", "version control", "git workflow"],
+      "category": "tools",
+      "domain": "general"
+    },
+    {
+      "name": "HTML/CSS",
+      "aliases": ["html", "html5", "css", "css3", "sass", "scss", "responsive web design", "responsive design"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "Prisma",
+      "aliases": ["prisma", "prisma orm"],
+      "category": "database",
+      "domain": "web"
+    },
+    {
+      "name": "Firebase",
+      "aliases": ["firebase", "firestore"],
+      "category": "backend",
+      "domain": "web"
+    },
+    {
+      "name": "AWS",
+      "aliases": ["aws", "amazon web services", "ec2", "s3", "lambda"],
+      "category": "devops",
+      "domain": "cloud"
+    },
+    {
+      "name": "CI/CD",
+      "aliases": ["ci/cd", "github actions", "gitlab ci", "jenkins"],
+      "category": "devops",
+      "domain": "general"
+    },
+    {
+      "name": "Python",
+      "aliases": ["python", "python3", "py"],
+      "category": "language",
+      "domain": "general"
+    },
+    {
+      "name": "Django",
+      "aliases": ["django", "drf", "django rest framework"],
+      "category": "backend",
+      "domain": "web"
+    },
+    {
+      "name": "Vue.js",
+      "aliases": ["vue", "vue.js", "vuejs"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "Angular",
+      "aliases": ["angular", "angularjs"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "PHP",
+      "aliases": ["php", "laravel", "codeigniter"],
+      "category": "backend",
+      "domain": "legacy-web"
+    },
+    {
+      "name": "WordPress",
+      "aliases": ["wordpress", "wp"],
+      "category": "cms",
+      "domain": "cms"
+    },
+    {
+      "name": "Flutter",
+      "aliases": ["flutter", "dart"],
+      "category": "mobile",
+      "domain": "mobile"
+    },
+    {
+      "name": "React Native",
+      "aliases": ["react native", "react-native"],
+      "category": "mobile",
+      "domain": "mobile"
+    },
+    {
+      "name": "Unreal Engine",
+      "aliases": ["unreal", "unreal engine", "ue4", "ue5", "unity"],
+      "category": "game",
+      "domain": "game-dev"
+    },
+    {
+      "name": "Kubernetes",
+      "aliases": ["kubernetes", "k8s"],
+      "category": "devops",
+      "domain": "cloud"
+    },
+    {
+      "name": "Jest",
+      "aliases": ["jest", "unit test", "vitest", "testing library"],
+      "category": "testing",
+      "domain": "web"
+    },
+    {
+      "name": "SEO",
+      "aliases": ["seo", "search engine optimization", "seo best practices", "metadata", "og tags"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "Performance Optimization",
+      "aliases": ["frontend performance", "performance optimization", "web performance", "frontend optimization", "optimization", "optimize", "core web vitals", "web vitals", "lighthouse"],
+      "category": "frontend",
+      "domain": "web"
+    },
+    {
+      "name": "Problem Solving",
+      "aliases": ["problem-solving", "problem solving", "debugging", "troubleshooting", "data structures", "algorithms", "dsa", "teamwork", "analytical", "logical thinking"],
+      "category": "general",
+      "domain": "general"
+    },
+    {
+      "name": "Redis",
+      "aliases": ["redis", "caching", "in-memory cache"],
+      "category": "database",
+      "domain": "web"
+    },
+    {
+      "name": "MySQL",
+      "aliases": ["mysql", "mariadb", "sql database"],
+      "category": "database",
+      "domain": "web"
+    },
+    {
+      "name": "System Design",
+      "aliases": ["system design", "microservices", "scalable architecture"],
+      "category": "architecture",
+      "domain": "general"
+    }
+  ]
+}
+
