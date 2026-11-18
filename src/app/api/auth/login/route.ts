@@ -42,13 +42,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Email address is required.' }, { status: 400 });
     }
 
-    let userPayload: JWTPayload | undefined = DEV_USERS[rawEmail];
+    let userPayload: JWTPayload | undefined;
 
-    // Try real Google Sheet user if available
+    // Check predefined system accounts
+    if (DEV_USERS[rawEmail]) {
+      if (password && password.length >= 6) {
+        userPayload = DEV_USERS[rawEmail];
+      } else {
+        return NextResponse.json({ message: 'Password must be at least 6 characters.' }, { status: 400 });
+      }
+    }
+
+    // Try real Google Sheet user
     if (!userPayload) {
       try {
         const user = await getAuthUserByEmail(rawEmail);
         if (user && user.password_hash && (await bcrypt.compare(password, user.password_hash))) {
+          if (!user.active) {
+            return NextResponse.json({ message: 'Account is deactivated. Contact Admin.' }, { status: 403 });
+          }
           userPayload = {
             id: user.id,
             name: user.name,
@@ -59,25 +71,12 @@ export async function POST(request: Request) {
           };
         }
       } catch (err) {
-        console.warn('[Auth] Live user lookup error, falling back to temporary dev user:', err);
+        console.warn('[Auth] Live user lookup error:', err);
       }
     }
 
-    // Temporary fallback: if not matched in sheet, automatically create a dev user session
     if (!userPayload) {
-      const role: UserRole = rawEmail.includes('mentor')
-        ? 'mentor'
-        : rawEmail.includes('manager')
-        ? 'manager'
-        : 'admin';
-
-      userPayload = {
-        id: `dev-${role}-${Date.now()}`,
-        name: rawEmail.split('@')[0],
-        email: rawEmail,
-        role: role,
-        team_role: role === 'mentor' ? 'mentor' : undefined,
-      };
+      return NextResponse.json({ message: 'Invalid email or password.' }, { status: 401 });
     }
 
     const secure = isSecureRequest(request);

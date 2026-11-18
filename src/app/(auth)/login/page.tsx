@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { ArrowRight, AtSign, BriefcaseBusiness, CheckCircle2, Eye, EyeOff, Hash, Loader2, Lock, Mail, ShieldCheck, Sparkles, UserRound, Zap } from 'lucide-react';
+import { ArrowRight, AtSign, BriefcaseBusiness, CheckCircle2, Eye, EyeOff, Hash, Loader2, Lock, Mail, Sparkles, UserRound } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,12 +41,6 @@ function LoginPageContent() {
     } catch {
       toast.error('Could not reach the server. Please try again.');
     }
-  }
-
-  async function quickLogin(email: string) {
-    loginForm.setValue('email', email);
-    loginForm.setValue('password', 'admin12345');
-    await onLogin({ email, password: 'admin12345' });
   }
 
   async function onRegister(values: RegisterInput) {
@@ -99,62 +93,18 @@ function LoginPageContent() {
             </div>
           ) : (
             <>
-              <div><p className="text-xs font-black uppercase tracking-[0.2em] text-violet-600 dark:text-violet-400">Team Portal</p><h2 className="mt-2 text-3xl font-black tracking-tight">{mode === 'login' ? 'Welcome back' : 'Join the placement team'}</h2><p className="mt-2 text-sm text-muted-foreground">{mode === 'login' ? 'Sign in with your account or use quick demo access.' : 'Create a request. Access starts after Admin approval.'}</p></div>
-              
-              {/* Temporary Quick Login Box */}
-              <div className="mt-6 rounded-2xl border border-violet-200 bg-violet-50/70 p-4 dark:border-violet-900/50 dark:bg-violet-950/30">
-                <div className="flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-violet-600 dark:text-violet-400" />
-                  <p className="text-xs font-bold text-violet-900 dark:text-violet-200">Temporary Quick Login (One-click sign in):</p>
-                </div>
-                <div className="mt-3 grid grid-cols-3 gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={isSubmitting}
-                    onClick={() => quickLogin('admin@programming-hero.com')}
-                    className="h-8 text-xs font-semibold hover:border-violet-500 hover:bg-violet-100/50 hover:text-violet-700"
-                  >
-                    Admin
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={isSubmitting}
-                    onClick={() => quickLogin('manager@programming-hero.com')}
-                    className="h-8 text-xs font-semibold hover:border-violet-500 hover:bg-violet-100/50 hover:text-violet-700"
-                  >
-                    Manager
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    disabled={isSubmitting}
-                    onClick={() => quickLogin('mentor@programming-hero.com')}
-                    className="h-8 text-xs font-semibold hover:border-violet-500 hover:bg-violet-100/50 hover:text-violet-700"
-                  >
-                    Mentor
-                  </Button>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => router.push('/manager')}
-                  className="mt-2.5 w-full text-center text-[11px] font-medium text-violet-600 hover:underline dark:text-violet-400"
-                >
-                  Directly enter dashboard without login →
-                </button>
+              <div>
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-violet-600 dark:text-violet-400">Team Portal</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight">{mode === 'login' ? 'Welcome back' : 'Join the placement team'}</h2>
+                <p className="mt-2 text-sm text-muted-foreground">{mode === 'login' ? 'Sign in with your authorized team account.' : 'Create a request. Access starts after Admin approval.'}</p>
               </div>
 
               <div className="mt-6 grid grid-cols-2 rounded-xl bg-muted p-1">{(['login', 'register'] as const).map((item) => <button key={item} type="button" onClick={() => switchMode(item)} className={`rounded-lg px-4 py-2.5 text-sm font-bold transition ${mode === item ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}>{item === 'login' ? 'Sign in' : 'Create account'}</button>)}</div>
               {mode === 'login' ? (
                 <form className="mt-6 space-y-5" onSubmit={loginForm.handleSubmit(onLogin)}>
                   <div><Label htmlFor="login-email">Email address</Label><div className="relative mt-2"><Mail className="absolute left-3.5 top-3.5 h-4 w-4 text-muted-foreground" /><Input id="login-email" type="email" autoComplete="email" placeholder="you@programming-hero.com" className="h-11 pl-10" {...loginForm.register('email')} /></div><FieldError message={loginForm.formState.errors.email?.message} /></div>
-                  <div><Label htmlFor="login-password">Password</Label><div className="relative mt-2"><Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-muted-foreground" /><Input id="login-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" placeholder="Any password (e.g. admin12345)" className="h-11 pl-10 pr-11" {...loginForm.register('password')} /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-3 rounded-md p-1 text-muted-foreground hover:text-foreground" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div><FieldError message={loginForm.formState.errors.password?.message} /></div>
+                  <div><Label htmlFor="login-password">Password</Label><div className="relative mt-2"><Lock className="absolute left-3.5 top-3.5 h-4 w-4 text-muted-foreground" /><Input id="login-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" placeholder="Enter your password" className="h-11 pl-10 pr-11" {...loginForm.register('password')} /><button type="button" onClick={() => setShowPassword((value) => !value)} className="absolute right-3 top-3 rounded-md p-1 text-muted-foreground hover:text-foreground" aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}</button></div><FieldError message={loginForm.formState.errors.password?.message} /></div>
                   <Button type="submit" disabled={isSubmitting} className="h-11 w-full bg-violet-600 font-bold hover:bg-violet-700">{isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Sign in securely <ArrowRight className="ml-2 h-4 w-4" /></>}</Button>
-                  <p className="flex items-center justify-center gap-2 text-xs text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> Temporary bypass active: Use any email/password to sign in.</p>
                 </form>
               ) : (
                 <form className="mt-6 space-y-4" onSubmit={registerForm.handleSubmit(onRegister)}>

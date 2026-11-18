@@ -7,14 +7,13 @@ export default async function RootIndexPage() {
   const token = cookies().get('access_token')?.value;
 
   if (!token) {
-    // Temporary bypass: redirect to /manager directly so user can work without login
-    redirect('/manager');
+    redirect('/login');
   }
 
   try {
     const payload = await verifyAccessToken(token);
     redirect(dashboardPathForRole(payload.role));
   } catch {
-    redirect('/manager');
+    redirect('/login');
   }
 }

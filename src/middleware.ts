@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
   const isCronRoute = pathname.startsWith('/api/cron/');
   const isApiRoute = pathname.startsWith('/api/');
 
-  // Public student attendance form pages — no auth required
+  // Public student attendance form pages & followups — no auth required
   const isPublicAttendRoute = pathname.startsWith('/attend/');
   const isPublicAttendApi = pathname.startsWith('/api/attend/');
   const isPublicFollowupRoute = pathname.startsWith('/placement-followup/');
@@ -26,40 +26,53 @@ export async function middleware(request: NextRequest) {
 
   const token = request.cookies.get('access_token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');
 
-  // TEMPORARY: Allow working seamlessly with or without login
+  // 1. If NO token is present (Unauthenticated)
   if (!token) {
+    // If accessing login/register, allow it
     if (isAuthRoute) return NextResponse.next();
 
-    const referer = request.headers.get('referer') || '';
-    let routeRole: 'admin' | 'manager' | 'mentor' = 'manager';
-    if (pathname.startsWith('/admin') || referer.includes('/admin')) routeRole = 'admin';
-    else if (pathname.startsWith('/mentor') || referer.includes('/mentor')) routeRole = 'mentor';
+    // If an API route is requested without auth, return 401
+    if (isApiRoute) {
+      return NextResponse.json(
+        { message: 'Authentication required. Please log in.' },
+        { status: 401 }
+      );
+    }
 
-    const fallbackUser = {
-      id: `dev-${routeRole}`,
-      email: `${routeRole}@programming-hero.com`,
-      role: routeRole,
-      name: `Dev ${routeRole.charAt(0).toUpperCase() + routeRole.slice(1)}`,
-      team_role: 'manager',
-    };
-
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-user-id', fallbackUser.id);
-    requestHeaders.set('x-user-email', fallbackUser.email);
-    requestHeaders.set('x-user-role', fallbackUser.role);
-    requestHeaders.set('x-user-name', fallbackUser.name);
-    requestHeaders.set('x-user-team-role', fallbackUser.team_role);
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    // For any protected page, strictly redirect to /login
+    const loginUrl = new URL('/login', request.url);
+    if (pathname !== '/') {
+      loginUrl.searchParams.set('redirect', pathname);
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
+  // 2. If token IS present, verify signature and expiry
   try {
     const payload = await verifyAccessTokenEdge(token);
 
+    // If already logged in and visiting /login or /register, redirect to dashboard
+    if (isAuthRoute) {
+      const redirectPath =
+        payload.role === 'admin'
+          ? '/admin'
+          : payload.role === 'manager'
+          ? '/manager'
+          : '/mentor';
+      return NextResponse.redirect(new URL(redirectPath, request.url));
+    }
+
+    // Role-based access control (RBAC)
+    if (pathname.startsWith('/admin') && payload.role !== 'admin') {
+      const redirectPath = payload.role === 'manager' ? '/manager' : '/mentor';
+      return NextResponse.redirect(new URL(redirectPath, request.url));
+    }
+
+    if (pathname.startsWith('/manager') && payload.role !== 'manager' && payload.role !== 'admin') {
+      return NextResponse.redirect(new URL('/mentor', request.url));
+    }
+
+    // Inject verified user headers into request
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-user-id', payload.id);
     requestHeaders.set('x-user-email', payload.email);
@@ -76,18 +89,22 @@ export async function middleware(request: NextRequest) {
       },
     });
   } catch {
-    if (isAuthRoute) return NextResponse.next();
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-user-id', 'dev-manager');
-    requestHeaders.set('x-user-email', 'manager@programming-hero.com');
-    requestHeaders.set('x-user-role', 'manager');
-    requestHeaders.set('x-user-name', 'Dev Manager');
+    // Token is invalid or expired
+    if (isApiRoute) {
+      return NextResponse.json(
+        { message: 'Session expired or invalid. Please log in again.' },
+        { status: 401 }
+      );
+    }
 
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    // Clear stale cookie and redirect to login
+    const loginUrl = new URL('/login', request.url);
+    if (pathname !== '/') {
+      loginUrl.searchParams.set('redirect', pathname);
+    }
+    const response = NextResponse.redirect(loginUrl);
+    response.cookies.delete('access_token');
+    return response;
   }
 }
 
